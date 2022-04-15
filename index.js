@@ -4,32 +4,26 @@ const playerX = "X"
 let currPlayer = playerO
 let gameOver = false
 
-window.onload = function () {
-	setGame()
-}
+board = [
+	["", "", ""],
+	["", "", ""],
+	["", "", ""],
+]
 
-function setGame() {
-	board = [
-		["", "", ""],
-		["", "", ""],
-		["", "", ""],
-	]
+for (let r = 0; r < 3; r++) {
+	for (let c = 0; c < 3; c++) {
+		let tile = document.createElement("div")
+		tile.id = `${r}-${c}`
+		tile.classList.add("tile")
 
-	for (let r = 0; r < 3; r++) {
-		for (let c = 0; c < 3; c++) {
-			let tile = document.createElement("div")
-			tile.id = `${r}-${c}`
-			tile.classList.add("tile")
-
-			if (r === 1 || r === 0) {
-				tile.classList.add("horizontal-line")
-			}
-			if (c === 1 || c === 0) {
-				tile.classList.add("vertical-line")
-			}
-			document.getElementById("board").appendChild(tile)
-			tile.addEventListener("click", setTile)
+		if (r === 1 || r === 0) {
+			tile.classList.add("horizontal-line")
 		}
+		if (c === 1 || c === 0) {
+			tile.classList.add("vertical-line")
+		}
+		document.getElementById("board").appendChild(tile)
+		tile.addEventListener("click", setTile)
 	}
 }
 
@@ -63,6 +57,7 @@ function checkWinner() {
 				tile.classList.add("winner")
 			}
 			gameOver = true
+			showWinner()
 			return
 		}
 	}
@@ -78,6 +73,7 @@ function checkWinner() {
 				tile.classList.add("winner")
 			}
 			gameOver = true
+			showWinner()
 			return
 		}
 	}
@@ -92,6 +88,7 @@ function checkWinner() {
 			tile.classList.add("winner")
 		}
 		gameOver = true
+		showWinner()
 		return
 	}
 	if (
@@ -104,6 +101,35 @@ function checkWinner() {
 			tile.classList.add("winner")
 		}
 		gameOver = true
+		showWinner()
 		return
 	}
+}
+
+function showWinner() {
+	let winner = document.querySelector(".winningText")
+	currPlayer === playerO ? (currPlayer = playerX) : (currPlayer = playerO)
+
+	winner.innerText = `${currPlayer} wins!`
+	let winningModal = document.querySelector("#winningModal")
+	winningModal.classList.add("show")
+
+	let resetButton = document.querySelector("#restartButton")
+	resetButton.addEventListener("click", resetGame)
+}
+
+function resetGame() {
+	let winningModal = document.querySelector("#winningModal")
+	winningModal.classList.remove("show")
+	let tiles = document.querySelectorAll(".tile")
+	tiles.forEach((tile) => {
+		tile.innerText = ""
+		tile.classList.remove("winner")
+	})
+	board = [
+		["", "", ""],
+		["", "", ""],
+		["", "", ""],
+	]
+	gameOver = false
 }
